@@ -50,9 +50,6 @@ int radixSortTest(vector<vector<int>>& batch, int inputCase, vector<vector<vecto
 
 int main() {
 
-	//my git hub testing variable
-	int testGitHub = 0;
-
 	//initializations
 	int size = 0,
 		range = 10000;
