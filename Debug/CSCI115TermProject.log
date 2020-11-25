@@ -1,0 +1,64 @@
+﻿  Source.cpp
+C:\Users\nugen\source\repos\CSCI115TermProject\CSCI115TermProject\insertionSort.h(3,10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+C:\Users\nugen\source\repos\CSCI115TermProject\CSCI115TermProject\insertionSort.h(4,10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+C:\Users\nugen\source\repos\CSCI115TermProject\CSCI115TermProject\insertionSort.h(11,20): warning C4018: '<': signed/unsigned mismatch
+C:\Users\nugen\source\repos\CSCI115TermProject\CSCI115TermProject\selectionSort.h(3,10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+C:\Users\nugen\source\repos\CSCI115TermProject\CSCI115TermProject\selectionSort.h(10,20): warning C4018: '<': signed/unsigned mismatch
+C:\Users\nugen\source\repos\CSCI115TermProject\CSCI115TermProject\selectionSort.h(13,23): warning C4018: '<': signed/unsigned mismatch
+C:\Users\nugen\source\repos\CSCI115TermProject\CSCI115TermProject\heapSort.h(69,22): warning C4018: '>=': signed/unsigned mismatch
+C:\Users\nugen\source\repos\CSCI115TermProject\CSCI115TermProject\heapSort.h(158,27): warning C4018: '<': signed/unsigned mismatch
+C:\Users\nugen\source\repos\CSCI115TermProject\CSCI115TermProject\countingSort.h(26,32): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+C:\Users\nugen\source\repos\CSCI115TermProject\CSCI115TermProject\countingSort.h(54,23): warning C4018: '<': signed/unsigned mismatch
+C:\Users\nugen\source\repos\CSCI115TermProject\CSCI115TermProject\Source.cpp(155,12): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+C:\Users\nugen\source\repos\CSCI115TermProject\CSCI115TermProject\Source.cpp(156,20): warning C4018: '<': signed/unsigned mismatch
+C:\Users\nugen\source\repos\CSCI115TermProject\CSCI115TermProject\Source.cpp(256,22): warning C4018: '<': signed/unsigned mismatch
+C:\Users\nugen\source\repos\CSCI115TermProject\CSCI115TermProject\Source.cpp(262,22): warning C4018: '<': signed/unsigned mismatch
+C:\Users\nugen\source\repos\CSCI115TermProject\CSCI115TermProject\Source.cpp(268,22): warning C4018: '<': signed/unsigned mismatch
+C:\Users\nugen\source\repos\CSCI115TermProject\CSCI115TermProject\Source.cpp(274,22): warning C4018: '<': signed/unsigned mismatch
+C:\Users\nugen\source\repos\CSCI115TermProject\CSCI115TermProject\Source.cpp(280,22): warning C4018: '<': signed/unsigned mismatch
+C:\Users\nugen\source\repos\CSCI115TermProject\CSCI115TermProject\Source.cpp(286,22): warning C4018: '<': signed/unsigned mismatch
+C:\Users\nugen\source\repos\CSCI115TermProject\CSCI115TermProject\Source.cpp(292,22): warning C4018: '<': signed/unsigned mismatch
+C:\Users\nugen\source\repos\CSCI115TermProject\CSCI115TermProject\Source.cpp(300,22): warning C4018: '<': signed/unsigned mismatch
+C:\Users\nugen\source\repos\CSCI115TermProject\CSCI115TermProject\Source.cpp(311,22): warning C4018: '<': signed/unsigned mismatch
+C:\Users\nugen\source\repos\CSCI115TermProject\CSCI115TermProject\Source.cpp(317,22): warning C4018: '<': signed/unsigned mismatch
+C:\Users\nugen\source\repos\CSCI115TermProject\CSCI115TermProject\Source.cpp(323,22): warning C4018: '<': signed/unsigned mismatch
+C:\Users\nugen\source\repos\CSCI115TermProject\CSCI115TermProject\Source.cpp(329,22): warning C4018: '<': signed/unsigned mismatch
+C:\Users\nugen\source\repos\CSCI115TermProject\CSCI115TermProject\Source.cpp(335,22): warning C4018: '<': signed/unsigned mismatch
+C:\Users\nugen\source\repos\CSCI115TermProject\CSCI115TermProject\Source.cpp(341,22): warning C4018: '<': signed/unsigned mismatch
+C:\Users\nugen\source\repos\CSCI115TermProject\CSCI115TermProject\Source.cpp(348,22): warning C4018: '<': signed/unsigned mismatch
+C:\Users\nugen\source\repos\CSCI115TermProject\CSCI115TermProject\Source.cpp(357,22): warning C4018: '<': signed/unsigned mismatch
+C:\Users\nugen\source\repos\CSCI115TermProject\CSCI115TermProject\Source.cpp(370,22): warning C4018: '<': signed/unsigned mismatch
+C:\Users\nugen\source\repos\CSCI115TermProject\CSCI115TermProject\Source.cpp(378,22): warning C4018: '<': signed/unsigned mismatch
+C:\Users\nugen\source\repos\CSCI115TermProject\CSCI115TermProject\Source.cpp(386,22): warning C4018: '<': signed/unsigned mismatch
+C:\Users\nugen\source\repos\CSCI115TermProject\CSCI115TermProject\Source.cpp(412,20): warning C4018: '<': signed/unsigned mismatch
+C:\Users\nugen\source\repos\CSCI115TermProject\CSCI115TermProject\Source.cpp(434,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\nugen\source\repos\CSCI115TermProject\CSCI115TermProject\Source.cpp(455,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\nugen\source\repos\CSCI115TermProject\CSCI115TermProject\Source.cpp(472,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\nugen\source\repos\CSCI115TermProject\CSCI115TermProject\Source.cpp(494,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\nugen\source\repos\CSCI115TermProject\CSCI115TermProject\Source.cpp(542,20): warning C4018: '<': signed/unsigned mismatch
+C:\Users\nugen\source\repos\CSCI115TermProject\CSCI115TermProject\Source.cpp(568,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\nugen\source\repos\CSCI115TermProject\CSCI115TermProject\Source.cpp(572,22): warning C4018: '<': signed/unsigned mismatch
+C:\Users\nugen\source\repos\CSCI115TermProject\CSCI115TermProject\Source.cpp(605,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\nugen\source\repos\CSCI115TermProject\CSCI115TermProject\Source.cpp(609,22): warning C4018: '<': signed/unsigned mismatch
+C:\Users\nugen\source\repos\CSCI115TermProject\CSCI115TermProject\Source.cpp(625,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\nugen\source\repos\CSCI115TermProject\CSCI115TermProject\Source.cpp(629,22): warning C4018: '<': signed/unsigned mismatch
+C:\Users\nugen\source\repos\CSCI115TermProject\CSCI115TermProject\Source.cpp(659,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\nugen\source\repos\CSCI115TermProject\CSCI115TermProject\Source.cpp(663,22): warning C4018: '<': signed/unsigned mismatch
+C:\Users\nugen\source\repos\CSCI115TermProject\CSCI115TermProject\Source.cpp(723,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\nugen\source\repos\CSCI115TermProject\CSCI115TermProject\Source.cpp(727,22): warning C4018: '<': signed/unsigned mismatch
+C:\Users\nugen\source\repos\CSCI115TermProject\CSCI115TermProject\Source.cpp(751,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\nugen\source\repos\CSCI115TermProject\CSCI115TermProject\Source.cpp(755,22): warning C4018: '<': signed/unsigned mismatch
+C:\Users\nugen\source\repos\CSCI115TermProject\CSCI115TermProject\Source.cpp(780,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\nugen\source\repos\CSCI115TermProject\CSCI115TermProject\Source.cpp(784,22): warning C4018: '<': signed/unsigned mismatch
+C:\Users\nugen\source\repos\CSCI115TermProject\CSCI115TermProject\Source.cpp(813,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\nugen\source\repos\CSCI115TermProject\CSCI115TermProject\Source.cpp(816,22): warning C4018: '<': signed/unsigned mismatch
+C:\Users\nugen\source\repos\CSCI115TermProject\CSCI115TermProject\Source.cpp(882,20): warning C4018: '<': signed/unsigned mismatch
+C:\Users\nugen\source\repos\CSCI115TermProject\CSCI115TermProject\Source.cpp(920,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\nugen\source\repos\CSCI115TermProject\CSCI115TermProject\Source.cpp(941,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\nugen\source\repos\CSCI115TermProject\CSCI115TermProject\Source.cpp(960,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\nugen\source\repos\CSCI115TermProject\CSCI115TermProject\Source.cpp(978,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\nugen\source\repos\CSCI115TermProject\CSCI115TermProject\Source.cpp(1042,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\nugen\source\repos\CSCI115TermProject\CSCI115TermProject\Source.cpp(1063,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\nugen\source\repos\CSCI115TermProject\CSCI115TermProject\Source.cpp(1082,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\nugen\source\repos\CSCI115TermProject\CSCI115TermProject\Source.cpp(1100,21): warning C4018: '<': signed/unsigned mismatch
+  CSCI115TermProject.vcxproj -> C:\Users\nugen\source\repos\CSCI115TermProject\Debug\CSCI115TermProject.exe
