@@ -1,7 +1,7 @@
 /*
-* CSCI 115 - Term Project: Theory vs Performance of Sort Algorithms
+* CSCI 115 - Term Project: Comparison of Sorting Algorithms
 *
-* Team Members: Emmanuel Cardenas, Ashley Taylor Diaz, Narendra Mannan, Michael Nugent, and Kalvin Xiong
+* Team Members: Emmanuel Cardenas, Ashley Taylor Diaz, Narendra Mannan, Michael Nugent, Kalvin Xiong, and Austin Wing
 */
 
 //public libraries
@@ -16,9 +16,10 @@
 #include "selectionSort.h" //selection sort
 #include "bubbleSort.h" //bubble Sort
 #include "mergeSort.h" //merge sort
+#include "quickSort.h" //quickSort
 #include "heapSort.h" //heapSort
 #include "countingSort.h"//countingSort
-#include "radixSort.h"
+#include "radixSort.h" //radixSort
 
 
 using namespace std;
@@ -42,7 +43,7 @@ void insertionSortTest(vector<vector<int>>& batch, int inputCase, vector<vector<
 void selectionSortTest(vector<vector<int>>& batch, vector<vector<vector<chrono::microseconds>>>& duration, bool multi);
 void bubbleSortTest(vector<vector<int>>& batch, int inputCase, vector<vector<vector<chrono::microseconds>>>& duration, bool multi);
 void mergeSortTest(vector<vector<int>>& batch, int inputCase, vector<vector<vector<chrono::microseconds>>>& duration, bool multi);
-void quickSortTest(vector<vector<int>>& batch, int inputCase, vector<vector<vector<chrono::microseconds>>>& duration, bool multi);
+void quickSortTest(vector<vector<int>>& batch, int inputCase, vector<vector<vector<chrono::microseconds>>>& qSduration, bool multi);
 void heapSortTest(vector<vector<int>>& batch, vector<vector<vector<chrono::microseconds>>>& duration, bool multi);
 int countingSortTest(vector<vector<int>>& batch, int inputCase, vector<vector<vector<chrono::microseconds>>>& duration, bool multi);
 int radixSortTest(vector<vector<int>>& batch, int inputCase, vector<vector<vector<chrono::microseconds>>>& duration, bool multi);
@@ -58,6 +59,8 @@ int main() {
 	int sizeCases = 0;
 	int inputCases = 1;
 	int bestRange = 0;//holds range value calculated by non-comparison sorts (counting & radix) for best input-case
+
+	bool excludeQSFlag = false;
 
 	//user input variables
 	int userChoice[4]{ 0,0,0,0 };
@@ -107,24 +110,45 @@ int main() {
 	//define cases count for "Do All" selection
 	if (userChoice[1] == 4)inputCases = 3;
 
+	//quickSort case.  can cause stack overflow in worst-case: first element pivot and reverse sorted array
+	if (userChoice[0] == 5) {
+		while (userChoice[2] < 1 && userChoice[2]>5500) {
+			cout << "Please choose an input size:\n";
+			cout << "(1) - 1,000\n";
+			cout << "(2) - 3,000\n";
+			cout << "(3) - 5,500\n";
+			cout << "Or manually input a size.  Note: QuickSort will overflow the stack on input sizes above 5,500.\n";
+			cin >> userChoice[2];
+		}
+		//update size variable based on user input
+		//quicksort case
+		if (userChoice[2] == 1)size = 1000;
+		else if (userChoice[2] == 2)size = 3000;
+		else if (userChoice[2] == 3)size = 5500;
+		else size = userChoice[2];
+	}
+
 	//Inform user of input size options and query for decision.
+	//all cases other than soley quickSort
 	while (userChoice[2] < 1) {
 		cout << "Please choose an input size:\n";
 		cout << "(1) - 1,000\n";
 		cout << "(2) - 10,000\n";
 		cout << "(3) - 100,000\n";
-		//cout << "(4) - Do All\n"; //too cumbersome to include "Do all"
 		cout << "Or manually input a size.\n";
-
 		cin >> userChoice[2];
 	}
-
-	//update size variable based on user input
+	//update size variable with user selection
 	if (userChoice[2] == 1)size = 1000;
 	else if (userChoice[2] == 2)size = 10000;
 	else if (userChoice[2] == 3)size = 100000;
-	//else if (userChoice[2] == 4)sizeCases = 3; //too cumbersome to include "Do all"
 	else size = userChoice[2];
+	if (size > 5500 && (userChoice[0] == 9)) {
+		cout << "Warning: QuickSort will overflow the stack on size inputs above 5,500.  Excluding it from tests.\n\n";
+		excludeQSFlag = true;
+	}
+
+
 
 	//acquire batches needed from user
 	while (userChoice[3] < 1) {
@@ -147,6 +171,12 @@ int main() {
 	vector<vector<vector<chrono::microseconds>>> duration(sorts, //sorting algorithm(s).  will be 1 or 8.
 		vector<vector<chrono::microseconds>>(inputCases, //# of input case types.  will be 1 or 3: best, average, worst.
 			vector<chrono::microseconds>(batches)));//# of batches: user defined.
+
+	//quickSort execution times storage
+	//can clean this up by resizing when not used or vice versa; resizing when used
+	vector<vector<vector<chrono::microseconds>>> quickSortDuration(3,//pivot types
+		vector<vector<chrono::microseconds>>(inputCases,//# of input cases chosen by user.  1 xor 3.
+			vector<chrono::microseconds>(batches)));//# of batches.  user defined.
 
 	//generate random arrays
 	srand(time(NULL)); //seed random number generator
@@ -178,7 +208,7 @@ int main() {
 	}
 	else if (userChoice[0] == 5) {//quick
 		cout << "Quick Sort\n";
-
+		quickSortTest(batch, userChoice[1], quickSortDuration, false);
 		/*
 		//may automatically include this in case decision
 		if (userChoice[0] == 5) {
@@ -228,6 +258,8 @@ int main() {
 
 		//quickSort
 			//each input case should use a most appropriate pivot?
+		tmp.assign(batch.begin(), batch.end());
+		if (!excludeQSFlag) quickSortTest(tmp, userChoice[1], quickSortDuration, true);
 
 		//heapSort
 		tmp.assign(batch.begin(), batch.end());
@@ -272,11 +304,27 @@ int main() {
 				cout << i << "\t" << duration[3][0][i].count() << "\t\t" << duration[3][1][i].count() << "\t\t" << duration[3][2][i].count() << "\n";
 			}
 			//quick
-			cout << "\nQuick Sort\n";
-			cout << "Batch\tBest-Case\tAverage-Case\tWorst-Case\n";
-			for (int i = 0; i < batch.size(); i++) {
-				cout << i << "\t" << duration[4][0][i].count() << "\t\t" << duration[4][1][i].count() << "\t\t" << duration[4][2][i].count() << "\n";
+			if (size <= 5500) {
+				cout << "\nQuick Sort";
+				cout << "\nBest-Case\t\t\tPivot-Types\n";
+				cout << "Batch\t\tFirst-Element\tRandom-Element\tMedian-Element\n";
+				for (int i = 0; i < batch.size(); i++) {
+					cout << i << "\t\t" << quickSortDuration[0][0][i].count() << "\t\t" << quickSortDuration[1][0][i].count() << "\t\t" << quickSortDuration[2][0][i].count() << "\n";
+				}
+				cout << "Average-Case\n";
+				cout << "Batch\t\tFirst-Element\tRandom-Element\tMedian-Element\n";
+
+				for (int i = 0; i < batch.size(); i++) {
+					cout << i << "\t\t" << quickSortDuration[0][1][i].count() << "\t\t" << quickSortDuration[1][1][i].count() << "\t\t" << quickSortDuration[2][1][i].count() << "\n";
+				}
+				cout << "Worst-Case\n";
+				cout << "Batch\t\tFirst-Element\tRandom-Element\tMedian-Element\n";
+
+				for (int i = 0; i < batch.size(); i++) {
+					cout << i << "\t\t" << quickSortDuration[0][2][i].count() << "\t\t" << quickSortDuration[1][2][i].count() << "\t\t" << quickSortDuration[2][2][i].count() << "\n";
+				}
 			}
+
 			//heap
 			cout << "\nHeap Sort\n";
 			cout << "Batch\tBest-Case = Average-Case = Worst-Case\n";
@@ -327,11 +375,18 @@ int main() {
 				cout << i << "\t" << duration[3][0][i].count() << "\n";
 			}
 			//quick
-			cout << "\nQuick Sort\n";
-			header(userChoice[1]);
-			for (int i = 0; i < batch.size(); i++) {
-				cout << i << "\t" << duration[4][0][i].count() << "\n";
+			if (size <= 5500) {
+				cout << "\nQuick Sort\n";
+				if (userChoice[1] == 1)cout << "Best-Case";
+				else if (userChoice[1] == 2)cout << "Average-Case";
+				else cout << "Worst-Case";
+				cout << "\t\tPivot-Types\n";
+				cout << "Batch\tFirst-Element\tRandom-Element\tMedian-Element\n";
+				for (int i = 0; i < batch.size(); i++) {
+					cout << i << "\t" << quickSortDuration[0][0][i].count() << "\t\t" << quickSortDuration[1][0][i].count() << "\t\t" << quickSortDuration[2][0][i].count() << "\n";
+				}
 			}
+
 			//heap
 			cout << "\nHeap Sort\n";
 			cout << "Batch\tBest-Case = Average-Case = Worst-Case\n";
@@ -358,7 +413,42 @@ int main() {
 
 		}
 	}
-	//only 1 algorithm selected
+	//quickSort
+	else if (userChoice[0] == 5 && size <= 5500) {
+		if (userChoice[1] == 4) {
+			cout << "Best-Case\t\t\tPivot-Types\n";
+			cout << "Batch\t\tFirst-Element\tRandom-Element\tMedian-Element\n";
+			for (int i = 0; i < batch.size(); i++) {
+				cout << i << "\t\t" << quickSortDuration[0][0][i].count() << "\t\t" << quickSortDuration[1][0][i].count() << "\t\t" << quickSortDuration[2][0][i].count() << "\n";
+			}
+			cout << "Average-Case\n";
+			cout << "Batch\t\tFirst-Element\tRandom-Element\tMedian-Element\n";
+
+			for (int i = 0; i < batch.size(); i++) {
+				cout << i << "\t\t" << quickSortDuration[0][1][i].count() << "\t\t" << quickSortDuration[1][1][i].count() << "\t\t" << quickSortDuration[2][1][i].count() << "\n";
+			}
+			cout << "Worst-Case\n";
+			cout << "Batch\t\tFirst-Element\tRandom-Element\tMedian-Element\n";
+
+			for (int i = 0; i < batch.size(); i++) {
+				cout << i << "\t\t" << quickSortDuration[0][2][i].count() << "\t\t" << quickSortDuration[1][2][i].count() << "\t\t" << quickSortDuration[2][2][i].count() << "\n";
+			}
+		}
+		else {//one input-case
+			if (userChoice[1] == 1)cout << "Best-Case";
+			else if (userChoice[1] == 2)cout << "Average-Case";
+			else cout << "Worst-Case";
+			cout << "\t\tPivot-Types\n";
+			cout << "Batch\tFirst-Element\tRandom-Element\tMedian-Element\n";
+			for (int i = 0; i < batch.size(); i++) {
+				cout << i << "\t" << quickSortDuration[0][0][i].count() << "\t\t" << quickSortDuration[1][0][i].count() << "\t\t" << quickSortDuration[2][0][i].count() << "\n";
+			}
+
+		}
+
+	}
+
+	//only 1 algorithm selected; not quicksort
 	else {
 		//all 3 input case types: best, average, worst
 		if (userChoice[1] == 4) {
@@ -386,8 +476,9 @@ int main() {
 			if (userChoice[0] == 7 || userChoice[0] == 8) rangeFormat(userChoice[1], bestRange, batch[0].size());
 
 		}
-		cout << "\nn = " << size << "\n";
 	}
+	cout << "\nn = " << size << "\n";
+
 }
 
 void rangeFormat(int uC, int bestRange, int avgRange) {
@@ -860,12 +951,358 @@ void mergeSortTest(vector<vector<int>>& batch, int inputCase, vector<vector<vect
 	}
 }
 
-void quickSortTest(vector<vector<int>>& batch, int inputCase, vector<vector<vector<chrono::microseconds>>>& duration, bool multi) {
+void quickSortTest(vector<vector<int>>& batch, int inputCase, vector<vector<vector<chrono::microseconds>>>& qSDuration, bool multi) {
 	//initialize stopwatch variables to measure execution times
 	chrono::steady_clock::time_point start;
 	chrono::steady_clock::time_point stop;
 
-	int algoPos = (multi) ? 4 : 0; //if all algorithms are tested, data must be sent to vector position [4] of duration, else [0]
+	//int algoPos = (multi) ? 4 : 0; //if all algorithms are tested, data must be sent to vector position [4] of duration, else [0]
+
+	//int array to comply with quickSort()'s parameters
+	int* tmpArr = new int[batch[0].size()];
+
+	//will do all three pivot types for each case
+
+	//input-case: best
+	if (inputCase == 1) {
+		for (int i = 0; i < batch.size(); i++) {
+
+			//copy vector array to int array
+			for (int j = 0; j < batch[i].size(); j++) tmpArr[j] = batch[i][j];
+
+			//sort array to create best case
+			quick_sort(tmpArr, 0, batch[i].size() - 1, 1);
+
+			//start stopwatch
+			start = chrono::high_resolution_clock::now();
+
+			//pivot: "first element"
+			quick_sort(tmpArr, 0, batch[i].size() - 1, 1);
+
+			//stop stopwatch
+			stop = chrono::high_resolution_clock::now();
+
+			//record execution time;
+			qSDuration[0][0][i] = chrono::duration_cast<microseconds>(stop - start);//pivot-type: first element;input-case: best; batch i
+
+
+			//copy vector array to int array
+			//for (int j = 0; j < batch[i].size(); j++) tmpArr[j] = batch[i][j];
+			//re-use sorted array
+
+			//start stopwatch
+			start = chrono::high_resolution_clock::now();
+
+			//pivot: "random"
+			quick_sort(tmpArr, 0, batch[i].size() - 1, 2);
+
+			//stop stopwatch
+			stop = chrono::high_resolution_clock::now();
+
+			//record execution time;
+			qSDuration[1][0][i] = chrono::duration_cast<microseconds>(stop - start);//pivot-type: random;input-case: best; batch i
+
+
+
+			//copy vector array to int array
+			//for (int j = 0; j < batch[i].size(); j++) tmpArr[j] = batch[i][j];
+			//re-use sorted array
+
+			//start stopwatch
+			start = chrono::high_resolution_clock::now();
+
+			//pivot: "median of first, middle, and last"
+			quick_sort(tmpArr, 0, batch[i].size() - 1, 3);
+
+			//stop stopwatch
+			stop = chrono::high_resolution_clock::now();
+
+			//record execution time;
+			qSDuration[2][0][i] = chrono::duration_cast<microseconds>(stop - start);//pivot-type: median; input case: best; batch i
+		}
+	}
+	//average case
+	else if (inputCase == 2) {
+		for (int i = 0; i < batch.size(); i++) {
+
+			//copy vector array to int array
+			for (int j = 0; j < batch[i].size(); j++) tmpArr[j] = batch[i][j];
+
+			//start stopwatch
+			start = chrono::high_resolution_clock::now();
+
+			//pivot: "first element"
+			quick_sort(tmpArr, 0, batch[i].size() - 1, 1);
+
+			//stop stopwatch
+			stop = chrono::high_resolution_clock::now();
+
+			//record execution time;
+			qSDuration[0][0][i] = chrono::duration_cast<microseconds>(stop - start);//pivot-type: first element; input-case;batch i
+
+
+			//copy vector array to int array
+			for (int j = 0; j < batch[i].size(); j++) tmpArr[j] = batch[i][j];
+
+			//start stopwatch
+			start = chrono::high_resolution_clock::now();
+
+			//pivot: "random"
+			quick_sort(tmpArr, 0, batch[i].size() - 1, 2);
+
+			//stop stopwatch
+			stop = chrono::high_resolution_clock::now();
+
+			//record execution time;
+			qSDuration[1][0][i] = chrono::duration_cast<microseconds>(stop - start);//pivot-type: random; input-case; batch i
+
+
+
+			//copy vector array to int array
+			for (int j = 0; j < batch[i].size(); j++) tmpArr[j] = batch[i][j];
+
+			//start stopwatch
+			start = chrono::high_resolution_clock::now();
+
+			//pivot: "median of first, middle, and last"
+			quick_sort(tmpArr, 0, batch[i].size() - 1, 3);
+
+			//stop stopwatch
+			stop = chrono::high_resolution_clock::now();
+
+			//record execution time;
+			qSDuration[2][0][i] = chrono::duration_cast<microseconds>(stop - start);//pivot-type: median; input-case; batch i
+		}
+	}
+	//worst case
+	else if (inputCase == 3) {
+		for (int i = 0; i < batch.size(); i++) {
+
+			//copy vector array to int array
+			for (int j = 0; j < batch[i].size(); j++) tmpArr[j] = batch[i][j];
+
+			//creat worst case by reversing sorted array
+			//1) sort array
+			quick_sort(tmpArr, 0, batch[i].size() - 1, 1);
+			//2) reverse sorted array
+			for (int j = 0, k = batch[i].size() - 1; j < k / 2; j++, k--) {
+				int swapTmp = tmpArr[j];
+				tmpArr[j] = tmpArr[k];
+				tmpArr[k] = swapTmp;
+			}
+			//store copy of reverse sorted array to use with other pivot-types
+			int* tmpArr2 = new int[batch[i].size()];
+			for (int j = 0; j < batch[i].size(); j++) tmpArr2[j] = tmpArr[j];
+
+			//start stopwatch
+			start = chrono::high_resolution_clock::now();
+
+			//pivot: "first element"
+			quick_sort(tmpArr, 0, batch[i].size() - 1, 1);
+
+			//stop stopwatch
+			stop = chrono::high_resolution_clock::now();
+
+			//record execution time;
+			qSDuration[0][0][i] = chrono::duration_cast<microseconds>(stop - start);//pivot-type: first element;input-case batch i
+
+
+			//copy reversed sorted array to tmp array
+			for (int j = 0; j < batch[i].size(); j++) tmpArr[j] = tmpArr2[j];
+
+			//start stopwatch
+			start = chrono::high_resolution_clock::now();
+
+			//pivot: "random"
+			quick_sort(tmpArr, 0, batch[i].size() - 1, 2);
+
+			//stop stopwatch
+			stop = chrono::high_resolution_clock::now();
+
+			//record execution time;
+			qSDuration[1][0][i] = chrono::duration_cast<microseconds>(stop - start);//pivot-type: random;input-case; batch i
+
+
+
+			//copy vector array to int array
+			for (int j = 0; j < batch[i].size(); j++) tmpArr[j] = tmpArr2[j];
+
+			//start stopwatch
+			start = chrono::high_resolution_clock::now();
+
+			//pivot: "median of first, middle, and last"
+			quick_sort(tmpArr, 0, batch[i].size() - 1, 3);
+
+			//stop stopwatch
+			stop = chrono::high_resolution_clock::now();
+
+			//record execution time;
+			qSDuration[2][0][i] = chrono::duration_cast<microseconds>(stop - start);//pivot-type: input-case;median; batch i
+		}
+	}
+	//all 3 input-cases
+	else {
+		for (int i = 0; i < batch.size(); i++) {
+			//average case
+			//copy vector data to int array to comply with quick_sort parameters
+			for (int j = 0; j < batch[i].size(); j++) tmpArr[j] = batch[i][j];
+
+			//start stopwatch
+			start = chrono::high_resolution_clock::now();
+
+			//pivot-type: "first element"
+			quick_sort(tmpArr, 0, batch[i].size(), 1);
+
+			//stop stopwatch
+			stop = chrono::high_resolution_clock::now();
+
+			//record execution times
+			qSDuration[0][1][i] = chrono::duration_cast<microseconds>(stop - start);//average case,first element pivot, batch i
+
+
+			//restore array to original unsorted state
+			for (int j = 0; j < batch[i].size(); j++) tmpArr[j] = batch[i][j];
+
+			//start stopwatch
+			start = chrono::high_resolution_clock::now();
+
+			//pivot-type: "random"
+			quick_sort(tmpArr, 0, batch[i].size(), 2);
+
+			//stop stopwatch
+			stop = chrono::high_resolution_clock::now();
+
+			//record execution times
+			qSDuration[1][1][i] = chrono::duration_cast<microseconds>(stop - start);//average case,random pivot, batch i
+
+
+
+			//restore array to original unsorted state
+			for (int j = 0; j < batch[i].size(); j++) tmpArr[j] = batch[i][j];
+
+			//start stopwatch
+			start = chrono::high_resolution_clock::now();
+
+			//pivot-type: "median of first, middle, and last elements"
+			quick_sort(tmpArr, 0, batch[i].size(), 3);
+
+			//stop stopwatch
+			stop = chrono::high_resolution_clock::now();
+
+			//record execution times
+			qSDuration[2][1][i] = chrono::duration_cast<microseconds>(stop - start);//average case,median pivot, batch i
+
+
+			//best case.  there is no difference between best and average cases now.  might change in future.
+			//copy vector data to int array to comply with quick_sort parameters
+			//for (int j = 0; j < batch[i].size(); j++) tmpArr[j] = batch[i][j];
+
+			//start stopwatch
+			start = chrono::high_resolution_clock::now();
+
+			//pivot-type: "first element"
+			quick_sort(tmpArr, 0, batch[i].size(), 1);
+
+			//stop stopwatch
+			stop = chrono::high_resolution_clock::now();
+
+			//record execution times
+			qSDuration[0][0][i] = chrono::duration_cast<microseconds>(stop - start);//pivot-type: first; input case: average; batch i
+
+
+			//restore array to original unsorted state
+			//for (int j = 0; j < batch[i].size(); j++) tmpArr[j] = batch[i][j];
+
+			//start stopwatch
+			start = chrono::high_resolution_clock::now();
+
+			//pivot-type: "random"
+			quick_sort(tmpArr, 0, batch[i].size(), 2);
+
+			//stop stopwatch
+			stop = chrono::high_resolution_clock::now();
+
+			//record execution times
+			qSDuration[1][0][i] = chrono::duration_cast<microseconds>(stop - start);//pivot-type: random; input case: average; batch i
+
+
+
+			//restore array to original unsorted state
+			//for (int j = 0; j < batch[i].size(); j++) tmpArr[j] = batch[i][j];
+
+			//start stopwatch
+			start = chrono::high_resolution_clock::now();
+
+			//pivot-type: "median of first, middle, and last elements"
+			quick_sort(tmpArr, 0, batch[i].size(), 3);
+
+			//stop stopwatch
+			stop = chrono::high_resolution_clock::now();
+
+			//record execution times
+			qSDuration[2][0][i] = chrono::duration_cast<microseconds>(stop - start);//pivot-type: median; input case: average; batch i
+
+
+
+			//creat worst case by reversing sorted array
+			//1) array is already sorted from last set of tests
+			//2) reverse sorted array
+			for (int j = 0, k = batch[i].size() - 1; j < k / 2; j++, k--) {
+				int swapTmp = tmpArr[j];
+				tmpArr[j] = tmpArr[k];
+				tmpArr[k] = swapTmp;
+			}
+			//store copy of reverse sorted array to use with other pivot-types
+			int* tmpArr2 = new int[batch[i].size()];
+			for (int j = 0; j < batch[i].size(); j++) tmpArr2[j] = tmpArr[j];
+
+			//start stopwatch
+			start = chrono::high_resolution_clock::now();
+
+			//pivot: "first element"
+			quick_sort(tmpArr, 0, batch[i].size() - 1, 1);
+
+			//stop stopwatch
+			stop = chrono::high_resolution_clock::now();
+
+			//record execution time;
+			qSDuration[0][2][i] = chrono::duration_cast<microseconds>(stop - start);//pivot-type: first; input case: worst; batch i
+
+
+			//copy reversed sorted array to tmp array
+			for (int j = 0; j < batch[i].size(); j++) tmpArr[j] = tmpArr2[j];
+
+			//start stopwatch
+			start = chrono::high_resolution_clock::now();
+
+			//pivot: "random"
+			quick_sort(tmpArr, 0, batch[i].size() - 1, 2);
+
+			//stop stopwatch
+			stop = chrono::high_resolution_clock::now();
+
+			//record execution time;
+			qSDuration[1][2][i] = chrono::duration_cast<microseconds>(stop - start);//pivot-type: random; input case: worst; batch i
+
+
+
+			//copy vector array to int array
+			for (int j = 0; j < batch[i].size(); j++) tmpArr[j] = tmpArr2[j];
+
+			//start stopwatch
+			start = chrono::high_resolution_clock::now();
+
+			//pivot: "median of first, middle, and last"
+			quick_sort(tmpArr, 0, batch[i].size() - 1, 3);
+
+			//stop stopwatch
+			stop = chrono::high_resolution_clock::now();
+
+			//record execution time;
+			qSDuration[2][2][i] = chrono::duration_cast<microseconds>(stop - start);//pivot-type: median; input case: worst; batch i
+
+		}
+	}
 }
 
 void heapSortTest(vector<vector<int>>& batch, vector<vector<vector<chrono::microseconds>>>& duration, bool multi) {
@@ -907,8 +1344,8 @@ int countingSortTest(vector<vector<int>>& batch, int inputCase, vector<vector<ve
 	int algoPos = (multi) ? 6 : 0; //if all algorithms are tested, data must be sent to vector position [6] of duration, else [0]
 	int inputCasePos = 0;
 	int bestRange = (int)sqrt((double)batch[0].size());
-	int worstRange = INT_MAX/1000;
-	
+	int worstRange = INT_MAX / 1000;
+
 	//int array to comply with CountingSort's parameters
 	int* tmpArr = new int[batch[0].size()];
 
@@ -1066,7 +1503,7 @@ int radixSortTest(vector<vector<int>>& batch, int inputCase, vector<vector<vecto
 			start = chrono::high_resolution_clock::now();
 
 			//sort
-			RadixSort(&batch[i], batch[i].size(), batch[0].size()-1);
+			RadixSort(&batch[i], batch[i].size(), batch[0].size() - 1);
 
 			//stop stopwatch
 			stop = chrono::high_resolution_clock::now();
@@ -1103,7 +1540,7 @@ int radixSortTest(vector<vector<int>>& batch, int inputCase, vector<vector<vecto
 			start = chrono::high_resolution_clock::now();
 
 			//sort
-			RadixSort(&batch[i], batch[i].size(), bestRange-1);//subtracting 1 from range to lose a digit
+			RadixSort(&batch[i], batch[i].size(), bestRange - 1);//subtracting 1 from range to lose a digit
 
 			//stop stopwatch
 			stop = chrono::high_resolution_clock::now();
