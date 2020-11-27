@@ -112,7 +112,7 @@ int main() {
 
 	//quickSort case.  can cause stack overflow in worst-case: first element pivot and reverse sorted array
 	if (userChoice[0] == 5) {
-		while (userChoice[2] < 1 && userChoice[2]>5500) {
+		while (userChoice[2] < 1 || userChoice[2]>5500) {
 			cout << "Please choose an input size:\n";
 			cout << "(1) - 1,000\n";
 			cout << "(2) - 3,000\n";
