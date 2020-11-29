@@ -13,13 +13,14 @@ typedef std::chrono::high_resolution_clock Clock;
 const int ARR_SIZE = 1000;
 
 void bubbleSort(int arr[], int size) {
-
-	for (int i = 0; i < size - 1; i++) { //when
-
+	bool swapped = true;
+	for (int i = 0; i < size - 1 && swapped == true; i++) { //when
+		swapped = false;
 		for (int j = 0; j < size - i - 1; j++) {
 
 			if (arr[j] > arr[j + 1]) {
 				swap(arr[j], arr[j + 1]);
+				swapped = true;
 			}
 
 		}
