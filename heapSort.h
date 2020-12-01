@@ -35,6 +35,8 @@ void Generate_LinearShuffledArray(int array[], int size)
 //Heap sort function
 class MaxHeap
 {
+    //comparisons tracker
+    int comparisons = 0;
 public: //FIXED ERROR: isEmpty is inaccesable
     int size{};
     std::vector<int> array = { -1 }; //use index 0 as some junk value
@@ -84,6 +86,7 @@ public: //FIXED ERROR: isEmpty is inaccesable
         if (i == 1) {
             return;
         }
+        comparisons++;//tracks comparisons made.  +1 for if-statement beneath.
         if (array[i] > array[parent(i)])
         {
             std::swap(array[parent(i)], array[i]); //CHANGED FORM CONVENTIONAL SWAP USING TEMP
@@ -109,10 +112,14 @@ public: //FIXED ERROR: isEmpty is inaccesable
 
         int max = i;
 
+        //key comparison in if-statement
+        comparisons++;
         if (leftChild(i) <= size && array[i] < array[leftChild(i)]) //check left child
         {
             max = leftChild(i);
         }
+        //key comparison in if-statement.
+        comparisons++;
         if (rightChild(i) <= size && array[max] < array[rightChild(i)]) //check right child
         {
             max = rightChild(i);
@@ -161,7 +168,8 @@ public: //FIXED ERROR: isEmpty is inaccesable
         }std::cout << std::endl;
     }
 
-    void HeapSort()
+    //returns number of comparisons made from insertion of initial array to sort end
+    int HeapSort()
     {
         for (int i = size; i >= 2; i--)
         {
@@ -169,6 +177,7 @@ public: //FIXED ERROR: isEmpty is inaccesable
             size--;
             HeapifyDown(1); //Heapify downwards starting at the root to get the next largest value
         }
+        return comparisons;
     }
 
 };

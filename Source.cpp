@@ -2,7 +2,12 @@
 * CSCI 115 - Term Project: Comparison of Sorting Algorithms
 *
 * Team Members: Emmanuel Cardenas, Ashley Taylor Diaz, Narendra Mannan, Michael Nugent, Kalvin Xiong, and Austin Wing
+* 
+* Dec. 5th, 2020
+* 
+* Compiled in Windows Visual Studio 2019
 */
+
 
 //public libraries
 #include <vector> //array container
@@ -39,15 +44,16 @@ void rangeFormat(int uC, int bestRange, int avgRange);
 
 
 //functions to test respective sorting algorithms and store execution times
-void insertionSortTest(vector<vector<int>>& batch, int inputCase, vector<vector<vector<chrono::microseconds>>>& duration);
+vector<int> insertionSortTest(vector<vector<int>>& batch, int inputCase, vector<vector<vector<chrono::microseconds>>>& duration);
 void selectionSortTest(vector<vector<int>>& batch, vector<vector<vector<chrono::microseconds>>>& duration, bool multi);
 void bubbleSortTest(vector<vector<int>>& batch, int inputCase, vector<vector<vector<chrono::microseconds>>>& duration, bool multi);
 void mergeSortTest(vector<vector<int>>& batch, int inputCase, vector<vector<vector<chrono::microseconds>>>& duration, bool multi);
 void quickSortTest(vector<vector<int>>& batch, int inputCase, vector<vector<vector<chrono::microseconds>>>& qSduration, bool multi);
-void heapSortTest(vector<vector<int>>& batch, vector<vector<vector<chrono::microseconds>>>& duration, bool multi);
+vector<int> heapSortTest(vector<vector<int>>& batch, vector<vector<vector<chrono::microseconds>>>& duration, bool multi);
 int countingSortTest(vector<vector<int>>& batch, int inputCase, vector<vector<vector<chrono::microseconds>>>& duration, bool multi);
 int radixSortTest(vector<vector<int>>& batch, int inputCase, vector<vector<vector<chrono::microseconds>>>& duration, bool multi);
 
+void bubbleSort(int arr[], int size);
 
 int main() {
 
@@ -178,6 +184,8 @@ int main() {
 		vector<vector<chrono::microseconds>>(inputCases,//# of input cases chosen by user.  1 xor 3.
 			vector<chrono::microseconds>(batches)));//# of batches.  user defined.
 
+	vector<int> comparisons(batch.size());
+
 	//generate random arrays
 	srand(time(NULL)); //seed random number generator
 	for (int i = 0; i < batch.size(); i++) fillArr(batch[i], range);
@@ -189,7 +197,7 @@ int main() {
 	//individual sorting algorithms
 	if (userChoice[0] == 1) { //insertion
 		cout << "Insertion Sort\n";
-		insertionSortTest(batch, userChoice[1], duration);
+		comparisons = insertionSortTest(batch, userChoice[1], duration);
 	}
 
 	else if (userChoice[0] == 2) {//selection
@@ -222,7 +230,7 @@ int main() {
 	}
 	else if (userChoice[0] == 6) {//heap
 		cout << "Heap Sort\n";
-		heapSortTest(batch, duration, false);
+		comparisons = heapSortTest(batch, duration, false);
 	}
 	else if (userChoice[0] == 7) {//counting
 		cout << "Counting Sort\n";
@@ -271,6 +279,13 @@ int main() {
 		//radixSort
 		radixSortTest(batch, userChoice[1], duration, true);
 	}
+
+
+
+
+
+
+
 
 
 	//send data to display.
@@ -459,11 +474,17 @@ int main() {
 			}
 			if (userChoice[0] == 7 || userChoice[0] == 8) cout << "\nRange\t[0, " << bestRange << ")\t[0, " << batch[0].size() << ")\t[0," << INT_MAX / 1000 << ")\n\n";
 		}
-		//only selection or heap (XOR)
-		else if (userChoice[1] == 0) {
+		//only selection or heap
+		else if (userChoice[0] == 2 || userChoice[0] == 6) {
 			cout << "Batch\tBest-Case = Average-Case = Worst-Case\n";
 			for (int i = 0; i < batch.size(); i++) {
 				cout << i << "\t\t\t" << duration[0][0][i].count() << "\n";
+			}
+			if (userChoice[0] == 6) {
+				cout << "Comparisons:\n";
+				for (int i = 0; i < batch.size(); i++) {
+					cout << i << "\t\t" << comparisons[i] << "\n";
+				}
 			}
 
 		}
@@ -474,6 +495,12 @@ int main() {
 				cout << i << "\t" << duration[0][0][i].count() << "\n";
 			}
 			if (userChoice[0] == 7 || userChoice[0] == 8) rangeFormat(userChoice[1], bestRange, batch[0].size());
+			if (userChoice[0] == 1) {
+				cout << "Comparisons:\n";
+				for (int i = 0; i < batch.size(); i++) {
+					cout << i << "\t\t" << comparisons[i] << "\n";
+				}
+			}
 
 		}
 	}
@@ -513,10 +540,13 @@ void prntArr(vector<int>& arr) {
 	cout << "\n";
 }
 
-void insertionSortTest(vector<vector<int>>& batch, int inputCase, vector<vector<vector<chrono::microseconds>>>& duration) {
+vector<int> insertionSortTest(vector<vector<int>>& batch, int inputCase, vector<vector<vector<chrono::microseconds>>>& duration) {
 	//initialize stopwatch variables to measure execution times
 	chrono::steady_clock::time_point start;
 	chrono::steady_clock::time_point stop;
+
+	//store number of comparisons made
+	vector<int> comparisons(batch.size());
 
 	if (inputCase == 1) {//best case input
 		for (int i = 0; i < batch.size(); i++) {
@@ -531,7 +561,7 @@ void insertionSortTest(vector<vector<int>>& batch, int inputCase, vector<vector<
 			start = chrono::high_resolution_clock::now();
 
 			//sort
-			insertionSort(tmp);
+			comparisons[i] = insertionSort(tmp);
 
 			stop = chrono::high_resolution_clock::now();
 
@@ -549,7 +579,7 @@ void insertionSortTest(vector<vector<int>>& batch, int inputCase, vector<vector<
 			start = chrono::high_resolution_clock::now();
 
 			//sort
-			insertionSort(tmp);
+			comparisons[i] = insertionSort(tmp);
 
 			stop = chrono::high_resolution_clock::now();
 
@@ -570,7 +600,7 @@ void insertionSortTest(vector<vector<int>>& batch, int inputCase, vector<vector<
 			start = chrono::high_resolution_clock::now();
 
 			//sort
-			insertionSort(tmp);
+			comparisons[i] = insertionSort(tmp);
 
 			stop = chrono::high_resolution_clock::now();
 
@@ -619,6 +649,7 @@ void insertionSortTest(vector<vector<int>>& batch, int inputCase, vector<vector<
 			duration[0][2][i] = chrono::duration_cast<chrono::microseconds>(stop - start);
 		}
 	}
+	return comparisons;
 }
 
 void selectionSortTest(vector<vector<int>>& batch, vector<vector<vector<chrono::microseconds>>>& duration, bool multi) {
@@ -1305,12 +1336,15 @@ void quickSortTest(vector<vector<int>>& batch, int inputCase, vector<vector<vect
 	}
 }
 
-void heapSortTest(vector<vector<int>>& batch, vector<vector<vector<chrono::microseconds>>>& duration, bool multi) {
+vector<int> heapSortTest(vector<vector<int>>& batch, vector<vector<vector<chrono::microseconds>>>& duration, bool multi) {
 	//initialize stopwatch variables to measure execution times
 	chrono::steady_clock::time_point start;
 	chrono::steady_clock::time_point stop;
 
 	int algoPos = (multi) ? 5 : 0; //if all algorithms are tested, data must be sent to vector position [5] of duration, else [0]
+
+	//comparisons tracker
+	vector<int> comparisons(batch.size());
 
 	//all input-cases result in identical outputs
 	for (int i = 0; i < batch.size(); i++) {
@@ -1323,7 +1357,7 @@ void heapSortTest(vector<vector<int>>& batch, vector<vector<vector<chrono::micro
 		start = chrono::high_resolution_clock::now();
 
 		//sort
-		tmp.HeapSort();
+		comparisons[i] = tmp.HeapSort();
 
 		//stop stopwatch
 		stop = chrono::high_resolution_clock::now();
@@ -1334,6 +1368,7 @@ void heapSortTest(vector<vector<int>>& batch, vector<vector<vector<chrono::micro
 		//cout << "\nPrinting heapSort result\n";
 		//tmp.printSortedArray();
 	}
+	return comparisons;
 }
 
 int countingSortTest(vector<vector<int>>& batch, int inputCase, vector<vector<vector<chrono::microseconds>>>& duration, bool multi) {
