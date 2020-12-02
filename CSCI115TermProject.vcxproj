@@ -144,12 +144,17 @@
   <ItemGroup>
     <ClInclude Include="bubbleSort.h" />
     <ClInclude Include="countingSort.h" />
+    <ClInclude Include="auxiliary.h" />
     <ClInclude Include="quickSort.h" />
     <ClInclude Include="radixSort.h" />
     <ClInclude Include="heapSort.h" />
     <ClInclude Include="insertionSort.h" />
     <ClInclude Include="mergeSort.h" />
     <ClInclude Include="selectionSort.h" />
+    <ClInclude Include="testing.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="README.md" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

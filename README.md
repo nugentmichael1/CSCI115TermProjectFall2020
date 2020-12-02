@@ -1,5 +1,6 @@
 # CSCI115TermProjectFall2020
 Comparison of Sorting Algorithms
+12/01/2020
 
 Source.cpp contains the main() function, which acts as a driver to access all eight sorting algorithms.  Sorting algorithms are separated into respective header files and must be present during compilation.
 
